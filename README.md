@@ -1,140 +1,104 @@
 
 # SGHSS - Sistema de Gestão Hospitalar e de Serviços de Saúde (Back-End)
 
-Este projeto é uma API desenvolvida em Python com FastAPI, que faz parte do Trabalho de Conclusão de Curso (TCC) focado na gestão de pacientes, consultas, prontuários e controle de usuários em um sistema de saúde.
+Este projeto é a API back-end para um Sistema de Gestão Hospitalar e de Serviços de Saúde (SGHSS) A API, construída com Python e FastAPI, fornece uma base robusta para gerenciar pacientes, consultas, prontuários e o controle de acesso de usuários.
 
 ---
 
-## 🚀 Funcionalidades principais
+## Principais características
 
-- 🔐 **Autenticação com JWT**
-- 👥 **CRUD de Usuários**
-- 🧑‍⚕️ **CRUD de Pacientes**
-- 📅 **CRUD de Consultas**
-- 📄 **CRUD de Prontuários**
-- 📝 **Logs automáticos** de operações realizadas no sistema
-
----
-
-## 🛠️ Tecnologias utilizadas
-
-- **Python 3.11**
-- **FastAPI**
-- **SQLAlchemy**
-- **PostgreSQL**
-- **Uvicorn**
-- **Pydantic**
-- **Passlib (Hash de senha)**
-- **PyJWT (Token JWT)**
+-   **Gestão de Pacientes**: CRUD para o registro de informações dos pacientes.
+-   **Agendamento de Consultas**: CRUD para marcar e gerenciar consultas.
+-   **Administração de Prontuários**: CRUD para o histórico clínico dos pacientes.
+-   **Logs de Auditoria**: Registro automático de operações críticas realizadas no sistema para garantir rastreabilidade
+-   **Autenticação Segura**: Sistema de login baseado em tokens JWT (JSON Web Token).
+-   **Gestão de Usuários**: CRUD completo para criação, visualização, atualização e exclusão de usuários.
+.
 
 ---
 
-## 🎯 Como rodar o projeto localmente
+## requisitos
 
-### 🔥 Pré-requisitos
+-   **Linguagem**: Python 3.11
+-   **Framework**: FastAPI
+-   **Banco de Dados**: PostgreSQL
+-   **ORM**: SQLAlchemy
+-   **Servidor ASGI**: Uvicorn
+-   **Validação de Dados**: Pydantic
+-   **Segurança**:
+    -   `Passlib` para hashing de senhas.
+    -   `PyJWT` para geração e validação de tokens de acesso.
 
-- Python instalado (versão 3.10 ou superior)
-- PostgreSQL instalado e rodando
+---
 
-### 🚧 Clone o repositório
+## Como Executar o Projeto Localmente
+
+Siga os passos abaixo para configurar e rodar a API em seu ambiente de desenvolvimento.
+
+### 1. Pré-requisitos
+
+-   Python 3.10 ou superior instalado.
+-   PostgreSQL instalado e com o serviço em execução.
+
+### 2. Clone o Repositório
 
 ```bash
-git clone https://github.com/gabrieleMarciano/TCCAPIBACKEND.git
-cd TCCAPIBACKEND
+git clone https://github.com/Matheus048O/api-sghss.git
+cd api-sghss
 ```
 
-### 📦 Crie e ative um ambiente virtual
+### 3. Crie e Ative um Ambiente Virtual (venv)
+
+Um ambiente virtual isola as dependências do projeto.
 
 ```bash
+# Criar o ambiente
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate   # Windows
+
+# Ativar no Windows
+venv\Scripts\activate
+
+# Ativar no Linux/Mac
+source venv/bin/activate
 ```
 
-### 📜 Instale as dependências
+### 4. Instale as Dependências
+
+Com o ambiente virtual ativado, instale todas as bibliotecas necessárias.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 🗄️ Configure o banco de dados
+### 5. Configure o Banco de Dados
 
-- Crie um banco chamado **`sghss`** no PostgreSQL.
+-   No seu servidor PostgreSQL, crie um novo banco de dados com o nome `sghss`.
+-   **Importante**: A estrutura das tabelas é gerenciada automaticamente pelo SQLAlchemy (ORM) ao iniciar a aplicação, então não é necessário executar scripts SQL manualmente.
 
-- Execute o script SQL em `/sql/script.sql` para criar as tabelas:
+### 7. Inicie a API
 
-```bash
-psql -U seu_usuario -d sghss -f sql/script.sql
-```
-
-### ⚙️ Configure o ambiente (opcional)
-
-Crie um arquivo `.env` (se desejar centralizar configs) com:
-
-```env
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/sghss
-SECRET_KEY=sua_chave_secreta
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=60
-```
-
-### 🚀 Rode a API
+Execute o servidor Uvicorn. A flag `--reload` reinicia o servidor automaticamente a cada alteração no código.
 
 ```bash
 uvicorn main:app --reload
 ```
 
----
+A API estará disponível em `http://127.0.0.1:8000`.
 
-## 📑 Documentação interativa
+## 🗺️ Estrutura do Projeto
 
-- Acesse a documentação automática em:
+A organização das pastas segue as melhores práticas para projetos FastAPI, separando as responsabilidades:
 
-```plaintext
-http://127.0.0.1:8000/docs
 ```
-
-ou
-
-```plaintext
-http://127.0.0.1:8000/redoc
-```
-
----
-
-## 🗺️ Estrutura de pastas
-
-```plaintext
 app/
 │
-├── auth/                 # Gerenciamento de autenticação e tokens
-├── crud/                 # Operações CRUD (database)
-├── database.py           # Conexão com banco
-├── models/               # Models (ORM)
-├── routers/              # Rotas da API
-├── schemas/              # Validações e serialização (Pydantic)
-├── logs/                 # Lógica de geração de logs
-main.py                   # Arquivo principal da API
-sql/                      # Scripts SQL de criação de tabelas
-requirements.txt          # Dependências
-README.md                 # Descrição do projeto
+├── auth/         # Lógica de autenticação, tokens e segurança.
+├── crud/         # Funções que interagem diretamente com o banco de dados.
+├── models/       # Definição das tabelas do banco (Modelos SQLAlchemy).
+├── routers/      # Definição dos endpoints da API (as rotas).
+├── schemas/      # Validação da estrutura de dados de entrada e saída (Esquemas Pydantic).
+├── logs/         # Módulos para configuração e gerenciamento de logs.
+│
+├── database.py   # Configuração da sessão e conexão com o banco.
+└── main.py       # Ponto de entrada da aplicação FastAPI.
 ```
-
----
-
-## 📜 Script SQL de criação das tabelas
-
-Disponível em: [`/sql/script.sql`](./sql/script.sql)
-
----
-
-## 👩‍💻 Autor
-
-Desenvolvido por [Gabriele Marciano](https://github.com/gabrieleMarciano) 🎓💙
-
----
-
-## 🏁 Status do Projeto
-
-✔️ **Concluído - TCC 2025**
-
