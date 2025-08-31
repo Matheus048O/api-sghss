@@ -1,20 +1,27 @@
 from fastapi import FastAPI
-from app.usuarios import routers as usuario_api_router
-from app.pacientes import routers as paciente_api_router
-from app.consultas import routers as consulta_api_router
-from app.prontuarios import routers as prontuario_api_router
-from app.logs import routers as logs_api_router
+from app.core.database import engine, Base
 
-api_principal = FastAPI()
+# --- IMPORTANTE ---
+# Importa a variável do roteador de cada arquivo de rotas
+from app.auth.routers import auth_api_router
+from app.consultas.routers import consulta_api_router
+from app.pacientes.routers import paciente_api_router
+from app.prontuarios.routers import prontuario_api_router
+from app.usuarios.routers import usuario_api_router
 
+# Cria as tabelas
+Base.metadata.create_all(bind=engine)
 
-# Incluindo o router com o prefixo correto
-api_principal.include_router(usuario_api_router.usuario_api_router, prefix="/usuarios", tags=["usuarios"])
-api_principal.include_router(paciente_api_router.paciente_api_router, prefix="/pacientes")
-api_principal.include_router(consulta_api_router.consulta_api_router, prefix="/consultas", tags=["consultas"])
-api_principal.include_router(prontuario_api_router.prontuario_api_router, prefix="/prontuarios", tags=["Prontuários"])
-api_principal.include_router(logs_api_router.logs_api_router, prefix="/logs", tags=["Logs"])
+app = FastAPI(title="API SGHSS")
 
-@api_principal.get("/")
+# --- IMPORTANTE ---
+# Inclui cada roteador na aplicação principal, definindo o prefixo da URL
+app.include_router(auth_api_router, prefix="/auth", tags=["Autenticação"])
+app.include_router(consulta_api_router, prefix="/consultas", tags=["Consultas"])
+app.include_router(paciente_api_router, prefix="/pacientes", tags=["Pacientes"])
+app.include_router(prontuario_api_router, prefix="/prontuarios", tags=["Prontuários"])
+app.include_router(usuario_api_router, prefix="/usuarios", tags=["Usuários"])
+
+@app.get("/", tags=["Root"])
 def read_root():
-    return {"message": "Welcome to SGHSS API!"}
+    return {"message": "Bem-vindo à API do SGHSS"}
